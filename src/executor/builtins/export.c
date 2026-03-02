@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/02 17:44:02 by jode-cas          #+#    #+#             */
+/*   Updated: 2026/03/02 17:44:02 by jode-cas         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
-//verifica se o nome é um identificador válido (começa com letra ou _ e só tem letras, números ou _)
 static int	is_valid_identifier(char *name)
 {
 	int	i;
@@ -17,7 +28,6 @@ static int	is_valid_identifier(char *name)
 	return (1);
 }
 
-// Imprime uma variável no formato "declare -x VAR="value"" pra ficar igual ao export sem argumentos do bash
 static void	print_declared(char *env)
 {
 	char	*eq;
@@ -36,23 +46,18 @@ static void	print_declared(char *env)
 	ft_putstr_fd("\"\n", 1);
 }
 
-// Processa cada arg do export, verificando se é válido e atualizando envs
 static int	process_arg(char *arg, t_ms *shell)
 {
 	char	*eq;
 	char	*key;
 
 	eq = ft_strchr(arg, '=');
-	//se tiver = a key (variavel) é a parte anterior à isso
 	if (eq)
 		key = ft_substr(arg, 0, eq - arg);
-	//se nao tiver =, a key é a string toda
 	else
 		key = ft_strdup(arg);
-	//se nao tiver nao ha o que analisar
 	if (!key)
 		return (1);
-	//se nao for valido, imprimi em STDERR e retorna 1 para erro 
 	if (!is_valid_identifier(key))
 	{
 		ft_putstr_fd("minishell: export: '", 2);
@@ -61,20 +66,17 @@ static int	process_arg(char *arg, t_ms *shell)
 		free(key);
 		return (1);
 	}
-	//se for valido e tiver =, atualiza o valor da variavel
 	if (eq)
 		update_env_val(key, eq + 1, shell);
 	free(key);
 	return (0);
 }
 
-// Implementação
 void	builtin_export(char **args, t_ms *shell)
 {
 	int	i;
 	int	status;
 
-//Se for só export sem arg
 	if (!args[1])
 	{
 		i = 0;
@@ -85,14 +87,11 @@ void	builtin_export(char **args, t_ms *shell)
 	}
 	i = 1;
 	status = 0;
-	//assumindo que já é export com arg, processa cada um
 	while (args[i])
 	{
-		//se der erro, salva o erro em exit_code
 		if (process_arg(args[i], shell) == 1)
 			status = 1;
 		i++;
 	}
-	//salva o exit_code do ultimo processo 0 
 	shell->last_status = status;
 }
