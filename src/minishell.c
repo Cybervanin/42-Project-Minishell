@@ -12,15 +12,11 @@
 
 #include "minishell.h"
 
-int	main(int argc, char *argv[], char *envs[])
+void shell_loop(t_ms *shell)
 {
 	char	*input;
 	t_token	*token_list;
-	t_ms	*shell;
 
-	(void)argc;
-	(void)argv;
-	shell = create_shell_instance(envs);
 	while (1)
 	{
 		input = readline("minishell$ ");
@@ -38,5 +34,16 @@ int	main(int argc, char *argv[], char *envs[])
 		expander(shell);
 		executor(shell);
 	}
+}
+
+int	main(int argc, char *argv[], char *envs[])
+{
+	t_ms	*shell;
+
+	(void)argc;
+	(void)argv;
+	shell = create_shell_instance(envs);
+	shell_loop(shell);
+	free(shell);
 	return (0);
 }
