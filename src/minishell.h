@@ -19,9 +19,7 @@
 //# include <signal.h>
 # include <unistd.h>
 //# include <sys/types.h>
-//# include <dirent.h>
 # include <fcntl.h>
-//# include <termios.h>
 # include <linux/limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
