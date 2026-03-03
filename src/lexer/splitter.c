@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   splitter.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/02 17:41:46 by jode-cas          #+#    #+#             */
+/*   Updated: 2026/03/02 17:42:12 by jode-cas         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static void	free_array(char **s)
@@ -16,10 +28,12 @@ static void	free_array(char **s)
 static char	*find_token_end(char *s)
 {
 	int	i;
+
 	i = 0;
 	if (is_metachar(s[i]))
 	{
-		if ((s[i] == '>' && s[i + 1] == '>') || (s[i] == '<' && s[i + 1] == '<'))
+		if ((s[i] == '>' && s[i + 1] == '>') || (s[i] == '<' && s[i
+					+ 1] == '<'))
 			return (s + 2);
 		return (s + 1);
 	}
@@ -28,7 +42,7 @@ static char	*find_token_end(char *s)
 		if (s[i] == '"' || s[i] == '\'')
 		{
 			skip_until_next_quote(s, &i);
-			break;
+			break ;
 		}
 		else
 			i++;
@@ -53,7 +67,7 @@ static int	fill_array(char **split, size_t word_count, char *start)
 			free_array(split);
 			return (0);
 		}
-		  ft_memcpy(split[i], start, end - start);
+		ft_memcpy(split[i], start, end - start);
 		start = end;
 		i++;
 	}
