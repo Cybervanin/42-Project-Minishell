@@ -1,23 +1,31 @@
 #include "../minishell.h"
 
-static void mount_string(t_ms *shell, int i, int j, int inicio, int breakpoint)
+typedef struct s_env_breakpoints {
+  int i;
+  int j;
+  int env_start;
+  int env_end;
+} t_env_breakpoints;
+
+static void mount_string(t_ms *shell, t_env_breakpoints breakpoints)
 {
   char *before_chunk;
   char *after_chunk;
   char *var_value;
   char *temp;
   char *result;
-  before_chunk = ft_substr(shell->cmd_list->args[j], 0, inicio);
-  if (shell->cmd_list->args[j][inicio + 1] == '?')
+
+  before_chunk = ft_substr(shell->cmd_list->args[breakpoints.j], 0, breakpoints.env_start);
+  if (shell->cmd_list->args[breakpoints.j][breakpoints.env_start + 1] == '?')
     var_value = ft_itoa(shell->last_status);
   else
-    var_value = get_env_val(ft_substr(shell->cmd_list->args[j], inicio + 1, breakpoint - inicio), shell);
+    var_value = get_env_val(ft_substr(shell->cmd_list->args[breakpoints.j], breakpoints.env_start + 1, breakpoints.env_end - breakpoints.env_start), shell);
   if (!var_value)
     var_value = ft_strdup("");
-  after_chunk = ft_substr(shell->cmd_list->args[j], breakpoint + 1, i - breakpoint + 1);
+  after_chunk = ft_substr(shell->cmd_list->args[breakpoints.j], breakpoints.env_end + 1, breakpoints.i - breakpoints.env_end + 1);
   temp = ft_strjoin(before_chunk, var_value);
   result = ft_strjoin(temp, after_chunk);
-  shell->cmd_list->args[j] = result;
+  shell->cmd_list->args[breakpoints.j] = result;
   free(temp);
   free(before_chunk);
   free(after_chunk);
@@ -25,21 +33,28 @@ static void mount_string(t_ms *shell, int i, int j, int inicio, int breakpoint)
 
 static void rebuild_string(t_ms *shell, int i, int j)
 {
-  int inicio;
-  int breakpoint;
-  inicio = i;
+  int env_start;
+  int env_end;
+  t_env_breakpoints breakpoints;
+
+  env_start = i;
   while (shell->cmd_list->args[j][i + 1] && shell->cmd_list->args[j][i + 1] != ' ' && shell->cmd_list->args[j][i + 1] != '"')
     i++;
-  breakpoint = i;
+  env_end = i;
   while (shell->cmd_list->args[j][i])
     i++;
-  mount_string(shell, i, j, inicio, breakpoint);
+  breakpoints.i = i;
+  breakpoints.j = j;
+  breakpoints.env_end = env_end;
+  breakpoints.env_start = env_start;
+  mount_string(shell, breakpoints);
 }
 
 void expander(t_ms *shell)
 {
   int i;
   int j;
+
   i = 0;
   j = 0;
   char inside_simple_quote;
