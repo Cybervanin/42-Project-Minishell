@@ -12,12 +12,50 @@
 
 #include "../minishell.h"
 
-static void multi_execution(t_ms *shell)
+static void piece_cmd_exec(t_ms *shell)
 {
+	char	**path_dirs;
+	char	*command_path;
 
+	if (is_builtin(shell->cmd_list->args[0]))
+		call_builtins(shell);
+	else
+	{
+		path_dirs = get_path_dirs(shell);
+		command_path = get_full_command_path(shell->cmd_list->args[0],
+				path_dirs);
+		free_matrix(path_dirs);
+		execvp(command_path, shell->cmd_list->args);
+		perror("execvp");
+		exit(EXIT_FAILURE);
+	}
 }
 
-static void single_execution(t_ms *shell)
+static void multi_cmd_exec(t_ms *shell)
+{
+	int fd[2];
+	pid_t child_id;
+
+	while	(shell->cmd_list)
+	{
+		if (pipe(fd) < 0)
+			perror("pipe");
+		child_id = fork();
+		if (child_id == 0)
+		{
+			close(fd[0]);
+			if (shell->cmd_list->next)
+				dup2(fd[1], STDOUT_FILENO);
+			close(fd[1]);
+			piece_cmd_exec(shell);
+		}
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[1]);
+		shell->cmd_list = shell->cmd_list->next;
+	}
+}
+
+static void single_cmd_exec(t_ms *shell)
 {
 	char	**path_dirs;
 	char	*command_path;
@@ -39,15 +77,25 @@ void	executor(t_ms *shell)
 {
 	int		initial_stdout;
 	int		initial_stdin;
+	t_cmd *first;
 
 	initial_stdout = dup(STDOUT_FILENO);
 	initial_stdin = dup(STDIN_FILENO);
+	first = shell->cmd_list;
 	if (shell->cmd_list->redirs && apply_redirects(shell) < 0)
 		exit(EXIT_FAILURE);
 	if (shell->cmd_list->next)
-		multi_execution(shell);
+	{
+		multi_cmd_exec(shell);
+		shell->cmd_list = first;
+		while(shell->cmd_list)
+		{
+			wait(NULL);
+			shell->cmd_list = shell->cmd_list->next
+		}
+	}
 	else
-		single_execution(shell);
+		single_cmd_exec(shell);
 	dup2(initial_stdout, STDOUT_FILENO);
 	close(initial_stdout);
 	dup2(initial_stdin, STDIN_FILENO);
