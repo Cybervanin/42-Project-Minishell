@@ -16,7 +16,7 @@
 # include "../libs/libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
-//# include <signal.h>
+# include <signal.h>
 # include <unistd.h>
 //# include <sys/types.h>
 # include <fcntl.h>
@@ -94,5 +94,6 @@ void				call_path(t_ms *shell, char *cmd);
 char				**get_path_dirs(t_ms *shell);
 char				*get_full_command_path(char *cmd, char **path_dirs);
 void				call_builtins(t_ms *shell);
+void				SIGINT_handler();
 
 #endif

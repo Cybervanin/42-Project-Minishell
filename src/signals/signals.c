@@ -10,44 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-void	shell_loop(t_ms *shell)
+void SIGINT_handler()
 {
-	char	*input;
-	t_token	*token_list;
-
-	while (1)
-	{
-		input = readline("minishell$ ");
-		if (!input)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (*input)
-			add_history(input);
-		token_list = lexit(input);
-		free(input);
-		shell->cmd_list = parser(token_list);
-		free(token_list);
-		expander(shell);
-		executor(shell);
-	}
-}
-
-int	main(int argc, char *argv[], char *envs[])
-{
-	t_ms	*shell;
-	struct sigaction sigint_sa;
-
-	sigemptyset(&sigint_sa.sa_mask);
-	sigint_sa.sa_handler = &SIGINT_handler;
-	sigaction(SIGINT, &sigint_sa, NULL);
-	(void)argc;
-	(void)argv;
-	shell = create_shell_instance(envs);
-	shell_loop(shell);
-	free(shell);
-	return (0);
+  rl_on_new_line();
+  rl_replace_line("", 0);
+  rl_redisplay();
 }
