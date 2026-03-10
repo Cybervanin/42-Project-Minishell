@@ -96,9 +96,6 @@ char	*remove_quotes(char *input)
 	char	*no_quotes;
 
 	len = ft_strlen(input);
-	no_quotes = ft_calloc(sizeof(char), ((len - 2) + 1));
-	if (!no_quotes)
-		return (NULL);
 	no_quotes = ft_substr(input, 1, len - 2);
 	return (no_quotes);
 }
