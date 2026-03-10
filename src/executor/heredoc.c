@@ -43,6 +43,7 @@ static void	read_heredoc(int fd, char *delimiter, t_ms *shell)
 
 	while (1)
 	{
+		set_signals_child();
 		line = readline("> ");
 		if (!line)
 			break ;
