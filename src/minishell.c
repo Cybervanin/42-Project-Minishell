@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:13:46 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/07 09:54:39 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:07:55 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	shell_loop(t_ms *shell)
 	char	*input;
 	t_token	*token_list;
 
+	set_signals();
 	while (1)
 	{
 		input = readline("minishell$ ");
@@ -39,11 +40,7 @@ void	shell_loop(t_ms *shell)
 int	main(int argc, char *argv[], char *envs[])
 {
 	t_ms	*shell;
-	struct sigaction sigint_sa;
 
-	sigemptyset(&sigint_sa.sa_mask);
-	sigint_sa.sa_handler = &SIGINT_handler;
-	sigaction(SIGINT, &sigint_sa, NULL);
 	(void)argc;
 	(void)argv;
 	shell = create_shell_instance(envs);
