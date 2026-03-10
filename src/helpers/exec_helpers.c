@@ -70,7 +70,7 @@ void	call_builtins(t_ms *shell)
 		exit(0);
 }
 
-void get_return_status(t_ms *shell, int return_status)
+static void get_return_status(t_ms *shell, int return_status)
 {
 	int return_status_code;
 
@@ -78,17 +78,11 @@ void get_return_status(t_ms *shell, int return_status)
 		return_status_code = WEXITSTATUS(return_status);
 	else if (WIFSIGNALED(return_status))
 	{
-		return_status_code = 128;
+		return_status_code = 128 + WTERMSIG(return_status);
 		if (WTERMSIG(return_status) == SIGINT)
-		{
 			write(1, "\n", 1);
-			return_status_code += SIGINT;
-		}
 		else if (WTERMSIG(return_status) == SIGQUIT)
-		{
 			write(1, "Quit (core dumped)\n", 19);
-			return_status_code += SIGQUIT;
-		}
 	}
 	shell->last_status = return_status_code;
 }
@@ -104,6 +98,8 @@ void	call_path(t_ms *shell, char *cmd)
 		set_signals_child();
 		execvp(cmd, shell->cmd_list->args);
 		perror("execvp");
+		if (errno == ENOENT)
+			exit(127);
 		exit(EXIT_FAILURE);
 	}
 	set_signals_exec();
