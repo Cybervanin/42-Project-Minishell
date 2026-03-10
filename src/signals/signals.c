@@ -1,37 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:13:46 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/07 09:54:39 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:13:51 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void SIGINT_handler()
+void sigint_handler(int sig)
 {
-  rl_on_new_line();
-  rl_replace_line("", 0);
-  printf("\033[2K\r");
-  rl_redisplay();
+	(void)sig;
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	write(1, "\n", 1); //acrescentado para pular linha porque o readline não faz isso automaticamente
+	rl_redisplay();
 }
-
-void config_terminal_signals()
+void set_signals(void)
 {
-  struct termios original;
-  struct termios raw;
-	struct sigaction sigint_sa;
+	struct sigaction sa_int;
+	struct sigaction sa_quit;
 
-  tcgetattr(STDIN_FILENO, &original);
-  raw = original;
-  raw.c_lflag &= ~(ECHOCTL);
-  tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
-	sigemptyset(&sigint_sa.sa_mask);
-	sigint_sa.sa_handler = &SIGINT_handler;
-  sigint_sa.sa_flags = 0;
-	sigaction(SIGINT, &sigint_sa, NULL);
+	sa_int.sa_handler = &sigint_handler;
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	sigaction(SIGINT, &sa_int, NULL);
+
+	sa_quit.sa_handler = SIG_IGN;
+	sigemptyset(&sa_quit.sa_mask);
+	sa_quit.sa_flags = 0;
+	sigaction(SIGQUIT, &sa_quit, NULL);
 }
