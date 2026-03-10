@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:13:10 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/02 15:36:20 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/09 21:47:41 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ void				call_path(t_ms *shell, char *cmd);
 char				**get_path_dirs(t_ms *shell);
 char				*get_full_command_path(char *cmd, char **path_dirs);
 void				call_builtins(t_ms *shell);
-void				SIGINT_handler();
+void				sigint_handler(int sig);
+void				set_signals(void);
 
 #endif
