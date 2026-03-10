@@ -26,7 +26,7 @@ static t_token	*create_token_list(char **str_tokens)
 	x = 0;
 	while (x < length)
 	{
-		new_token.value = str_tokens[x];
+		new_token.value = ft_strdup(str_tokens[x]);
 		new_token.type = get_token_type(str_tokens[x]);
 		token_list[x] = new_token;
 		x++;
