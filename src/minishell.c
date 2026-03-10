@@ -47,6 +47,7 @@ int	main(int argc, char *argv[], char *envs[])
 	(void)argv;
 	shell = create_shell_instance(envs);
 	shell_loop(shell);
+	free_matrix(shell->cmd_list->args);
 	free_matrix(shell->envs);
 	free(shell);
 	return (0);

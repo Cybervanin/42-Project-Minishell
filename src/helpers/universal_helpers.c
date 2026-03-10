@@ -61,7 +61,10 @@ char	heredoc_stop_condition(char *line, char *delimiter)
 		if (ft_strncmp(line, unquoted_delimiter,
 				ft_strlen(unquoted_delimiter)) == 0
 			&& ft_strlen(line) == ft_strlen(unquoted_delimiter))
+		{
+			free(unquoted_delimiter);
 			return (1);
+		}
 	}
 	else
 	{
