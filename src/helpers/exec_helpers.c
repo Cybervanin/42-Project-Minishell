@@ -70,9 +70,31 @@ void	call_builtins(t_ms *shell)
 		exit(0);
 }
 
+void get_return_status(t_ms *shell, int return_status)
+{
+	int return_status_code;
+
+	if (WIFEXITED(return_status))
+		return_status_code = WEXITSTATUS(return_status);
+	else if (WIFSIGNALED(return_status))
+	{
+		return_status_code = 128;
+		if (WTERMSIG(return_status) == SIGINT)
+		{
+			write(1, "\n", 1);
+			return_status_code += SIGINT;
+		}
+		else if (WTERMSIG(return_status) == SIGQUIT)
+		{
+			write(1, "Quit (core dumped)\n", 19);
+			return_status_code += SIGQUIT;
+		}
+	}
+	shell->last_status = return_status_code;
+}
+
 void	call_path(t_ms *shell, char *cmd)
 {
-	int		return_status_code;
 	int		return_status;
 	pid_t	child_pid;
 
@@ -86,9 +108,5 @@ void	call_path(t_ms *shell, char *cmd)
 	}
 	set_signals_exec();
 	waitpid(child_pid, &return_status, 0);
-	if (WIFEXITED(return_status))
-	{
-		return_status_code = WEXITSTATUS(return_status);
-		shell->last_status = return_status_code;
-	}
+	get_return_status(shell, return_status);
 }
