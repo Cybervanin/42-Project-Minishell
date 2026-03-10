@@ -25,6 +25,8 @@ void	shell_loop(t_ms *shell)
 			printf("exit\n");
 			break ;
 		}
+		if (*input == '\0')
+			continue;
 		if (*input)
 			add_history(input);
 		token_list = lexit(input);
