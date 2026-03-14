@@ -39,3 +39,21 @@ t_ms	*create_shell_instance(char **envs)
 	shell->last_status = 0;
 	return (shell);
 }
+
+char is_empty_command(char	*input)
+{
+	int i;
+
+	i = 0;
+	if (*input == '\0')
+		return 1;
+	else {
+		while (input[i])
+		{
+			if (!ft_isalnum(input[i]))
+				return 1;
+			i++;
+		}
+	}
+	return 0;
+}

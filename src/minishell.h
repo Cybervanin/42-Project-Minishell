@@ -98,5 +98,6 @@ void				sigint_handler(int sig);
 void				set_signals(void);
 void				set_signals_child(void);
 void				set_signals_exec(void);
+char is_empty_command(char	*input);
 
 #endif

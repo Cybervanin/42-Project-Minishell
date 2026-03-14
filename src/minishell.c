@@ -26,7 +26,7 @@ void	shell_loop(t_ms *shell)
 			printf("exit\n");
 			break ;
 		}
-		if (*input == '\0')
+		if (is_empty_command(input))
 			continue;
 		if (*input)
 			add_history(input);
