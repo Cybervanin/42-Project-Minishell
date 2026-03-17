@@ -33,9 +33,9 @@ static void	piece_cmd_exec(t_ms *shell)
 		command_path = get_full_command_path(shell->cmd_list->args[0],
 				path_dirs);
 		free_matrix(path_dirs);
-		execvp(command_path, shell->cmd_list->args);
+		execve(command_path, shell->cmd_list->args, shell->envs);
 		free(command_path);
-		perror("execvp");
+		perror("execve");
 		exit(EXIT_FAILURE);
 	}
 }

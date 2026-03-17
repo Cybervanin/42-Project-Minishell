@@ -98,7 +98,7 @@ void	call_path(t_ms *shell, char *cmd)
 		if (!cmd || !shell->cmd_list->args || !shell->cmd_list->args[0])
 			exit(127);
 		set_signals_child();
-		execvp(cmd, shell->cmd_list->args);
+		execve(cmd, shell->cmd_list->args, shell->envs);
 		perror(cmd);
 		if (errno == ENOENT)
 			exit(127);
