@@ -6,7 +6,7 @@
 /*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:15:13 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/02 15:15:24 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/17 19:43:47 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,20 +40,23 @@ t_ms	*create_shell_instance(char **envs)
 	return (shell);
 }
 
-char is_empty_command(char	*input)
+char	is_empty_command(char *input)
 {
-	int i;
+	int		i;
+	char	is_empty;
 
 	i = 0;
+	is_empty = 1;
 	if (*input == '\0')
-		return 1;
-	else {
+		return (1);
+	else
+	{
 		while (input[i])
 		{
-			if (!ft_isalnum(input[i]))
-				return 1;
+			if (ft_isalnum(input[i]))
+				is_empty = 0;
 			i++;
 		}
 	}
-	return 0;
+	return (is_empty);
 }
