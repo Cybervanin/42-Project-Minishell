@@ -6,7 +6,7 @@
 /*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 17:53:07 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/07 09:58:41 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/17 19:48:26 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,13 +96,14 @@ void	call_path(t_ms *shell, char *cmd)
 	if (child_pid == 0)
 	{
 		if (!cmd || !shell->cmd_list->args || !shell->cmd_list->args[0])
+		{
+			perror(cmd);
 			exit(127);
+		}
 		set_signals_child();
 		execve(cmd, shell->cmd_list->args, shell->envs);
 		perror(cmd);
-		if (errno == ENOENT)
-			exit(127);
-    else if (errno == EACCES)
+    if (errno == EACCES)
 			exit(126);
     else
 			exit(1);
