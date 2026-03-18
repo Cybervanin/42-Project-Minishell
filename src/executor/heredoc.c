@@ -37,10 +37,11 @@ static void	expand_line(char **line, t_ms *shell)
 	}
 }
 
-static void	read_heredoc(int fd, char *delimiter, t_ms *shell)
+static void	read_heredoc(int *fd, char *delimiter, t_ms *shell)
 {
 	char	*line;
 
+	close(fd[0]);
 	while (1)
 	{
 		set_signals_child();
@@ -54,22 +55,28 @@ static void	read_heredoc(int fd, char *delimiter, t_ms *shell)
 			free(line);
 			break ;
 		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+		write(fd[1], line, ft_strlen(line));
+		write(fd[1], "\n", 1);
 		free(line);
 	}
+	close(fd[1]);
+	exit(0);
 }
 
 static int	handle_heredoc(char *delimiter, t_ms *shell)
 {
 	int	fd[2];
+	pid_t heredoc_pid;
 
 	if (pipe(fd) < 0)
 	{
 		perror("pipe");
 		return (-1);
 	}
-	read_heredoc(fd[1], delimiter, shell);
+	heredoc_pid = fork();
+	if (heredoc_pid == 0)
+		read_heredoc(fd, delimiter, shell);
+	wait(NULL);
 	close(fd[1]);
 	return (fd[0]);
 }
