@@ -103,12 +103,12 @@ void	call_path(t_ms *shell, char *cmd)
 		set_signals_child();
 		execve(cmd, shell->cmd_list->args, shell->envs);
 		perror(cmd);
-    if (errno == EACCES)
-			exit(126);
-    else
-			exit(1);
 	}
 	set_signals_exec();
-	waitpid(child_pid, &return_status, 0);
+	while (waitpid(child_pid, &return_status, 0) == -1) {
+    if (errno != EINTR)
+			break;
+	}
+	set_signals();
 	get_return_status(shell, return_status);
 }

@@ -41,10 +41,10 @@ static void	read_heredoc(int *fd, char *delimiter, t_ms *shell)
 {
 	char	*line;
 
+	set_signals_child();
 	close(fd[0]);
 	while (1)
 	{
-		set_signals_child();
 		line = readline("> ");
 		if (!line)
 			break ;
@@ -67,16 +67,19 @@ static int	handle_heredoc(char *delimiter, t_ms *shell)
 {
 	int	fd[2];
 	pid_t heredoc_pid;
+	int status;
 
 	if (pipe(fd) < 0)
-	{
-		perror("pipe");
 		return (-1);
-	}
 	heredoc_pid = fork();
 	if (heredoc_pid == 0)
 		read_heredoc(fd, delimiter, shell);
-	wait(NULL);
+	set_signals_exec();
+	while (waitpid(heredoc_pid, &status, 0) == -1) {
+    if (errno != EINTR)
+			break;
+	}
+	set_signals();
 	close(fd[1]);
 	return (fd[0]);
 }
