@@ -21,7 +21,11 @@ static void	piece_cmd_exec(t_ms *shell)
 	char	*command_path;
 
 	if (shell->cmd_list->redirs && apply_redirects(shell) < 0)
-		exit(EXIT_FAILURE);
+	{
+		if (shell->last_status == 130)
+			exit(130);
+		exit(1);
+	}
 	if (is_builtin(shell->cmd_list->args[0]))
 	{
 		call_builtins(shell);
@@ -75,7 +79,7 @@ static void	single_cmd_exec(t_ms *shell)
 	char	*command_path;
 
 	if (shell->cmd_list->redirs && apply_redirects(shell) < 0)
-		exit(EXIT_FAILURE);
+		return ;
 	if (is_builtin(shell->cmd_list->args[0]))
 		call_builtins(shell);
 	else
@@ -101,6 +105,11 @@ static void	await_results(t_ms *shell, pid_t child_pid)
 	waitpid(child_pid, &return_status, 0);
 	if (WIFEXITED(return_status))
 		shell->last_status = WEXITSTATUS(return_status);
+	if (WIFSIGNALED(return_status))
+	{
+		shell->last_status = 128 + WTERMSIG(return_status);
+	}
+	
 }
 
 void	executor(t_ms *shell)
