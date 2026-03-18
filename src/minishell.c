@@ -17,7 +17,6 @@ void	shell_loop(t_ms *shell)
 	char	*input;
 	t_token	*token_list;
 
-	set_signals();
 	while (1)
 	{
 		input = readline("minishell$ ");
@@ -47,6 +46,7 @@ int	main(int argc, char *argv[], char *envs[])
 
 	(void)argc;
 	(void)argv;
+	set_signals();
 	shell = create_shell_instance(envs);
 	shell_loop(shell);
 	free_minishell_memory(shell);
