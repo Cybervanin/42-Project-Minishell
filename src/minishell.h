@@ -100,4 +100,6 @@ void				set_signals_child(void);
 void				set_signals_exec(void);
 char				is_empty_command(char *input);
 
+extern int heredoc_sigint;
+
 #endif

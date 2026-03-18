@@ -12,6 +12,8 @@
 
 #include "../minishell.h"
 
+int heredoc_sigint = 0;
+
 char	is_delimiter_quotted(char *delimiter)
 {
 	int	delim_size;
@@ -80,6 +82,11 @@ static int	handle_heredoc(char *delimiter, t_ms *shell)
 			break;
 	set_signals();
 	close(fd[1]);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT) {
+    heredoc_sigint = 1;
+    close(fd[0]);
+    return (-1);
+  }
 	return (fd[0]);
 }
 
