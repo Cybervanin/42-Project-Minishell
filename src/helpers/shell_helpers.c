@@ -34,7 +34,7 @@ t_ms	*create_shell_instance(char **envs)
 {
 	t_ms	*shell;
 
-	shell = ft_calloc(sizeof(t_ms *), 2);
+	shell = ft_calloc(sizeof(t_ms), 2);
 	store_envs(shell, envs);
 	shell->last_status = 0;
 	return (shell);

@@ -34,10 +34,10 @@ void	shell_loop(t_ms *shell)
 			continue;
 		free(input);
 		shell->cmd_list = parser(token_list);
-		free(token_list);
 		expander(shell);
 		executor(shell);
 	}
+	free_minishell_memory(shell, token_list);
 }
 
 int	main(int argc, char *argv[], char *envs[])
@@ -49,6 +49,5 @@ int	main(int argc, char *argv[], char *envs[])
 	set_signals();
 	shell = create_shell_instance(envs);
 	shell_loop(shell);
-	free_minishell_memory(shell);
 	return (0);
 }
