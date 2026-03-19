@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	free_minishell_memory(t_ms *shell, t_token	*token_list)
+void	free_minishell_memory(t_ms *shell)
 {
 	int i;
 
@@ -32,6 +32,12 @@ void	free_minishell_memory(t_ms *shell, t_token	*token_list)
 	if (shell->envs)
 		free_matrix(shell->envs);
 	free(shell);
+}
+
+void free_token_list(t_token *token_list)
+{
+	int i;
+
 	i = 0;
 	if (token_list)
 	{

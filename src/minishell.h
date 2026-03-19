@@ -76,7 +76,7 @@ t_ms				*create_shell_instance(char **envs);
 void				expander(t_ms *shell);
 char				*get_env_val(const char *name, t_ms *shell);
 void				update_env_val(const char *key, char *value, t_ms *shell);
-void				free_minishell_memory(t_ms *shell, t_token	*token_list);
+void				free_minishell_memory(t_ms *shell);
 char				*remove_quotes(char *input);
 void				executor(t_ms *shell);
 void				free_matrix(char **m);
@@ -102,6 +102,7 @@ void				set_signals_exec(void);
 char				is_empty_command(char *input);
 char				does_env_exist(char **envs, char *name);
 void				handle_sigint_last_status(t_ms *shell);
+void				free_token_list(t_token *token_list);
 
 extern int sigint;
 
