@@ -15,7 +15,7 @@
 
 #include "../minishell.h"
 
-static int	count_args(t_token *token_list, int i)
+static int	count_token_args(t_token *token_list, int i)
 {
 	int	arg_count;
 
@@ -96,7 +96,7 @@ t_cmd	*parser(t_token *token_list)
 		else
 			last->next = new;
 		last = new;
-		total_args = count_args(token_list, i);
+		total_args = count_token_args(token_list, i);
 		new->args = ft_calloc(sizeof(char *), total_args + 1);
 		parse_token_to_cmd(token_list, new, &i);
 		if (token_list[i].value != NULL && token_list[i].type == PIPE)

@@ -85,6 +85,7 @@ void				builtin_env(t_ms *shell);
 void				builtin_cd(char **args, t_ms *shell);
 void				builtin_export(char **args, t_ms *shell);
 void				builtin_unset(t_ms *shell, char *name);
+void				builtin_exit(t_ms *shell);
 int					apply_redirects(t_ms *shell);
 int					redirect_heredoc(char *delimiter, t_ms *shell);
 void				rebuild_string(char **og_str, int i, t_ms *shell);
@@ -99,6 +100,7 @@ void				set_signals(void);
 void				set_signals_child(void);
 void				set_signals_exec(void);
 char				is_empty_command(char *input);
+int					count_args(char **args);
 
 extern int heredoc_sigint;
 
