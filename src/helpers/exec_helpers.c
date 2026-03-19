@@ -74,6 +74,7 @@ static void get_return_status(t_ms *shell, int return_status)
 {
 	int return_status_code;
 
+	return_status_code = 0;
 	if (WIFEXITED(return_status))
 		return_status_code = WEXITSTATUS(return_status);
 	else if (WIFSIGNALED(return_status))
