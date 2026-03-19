@@ -12,7 +12,7 @@ void builtin_exit(t_ms *shell)
     return ;
   }
   exit_status = 0;
-  if (arg)
+  if (shell->cmd_list->args[1])
     exit_status = ft_atoi(arg);
   shell->last_status = exit_status;
   exit(exit_status);
