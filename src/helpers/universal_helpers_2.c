@@ -12,12 +12,16 @@
 
 #include "../minishell.h"
 
-int count_args(char **args)
+int	array_length(char **array)
 {
-  int i;
+	int	counter;
 
-  i = 0;
-  while(args[i])
-    i++;
-  return (i);
+	counter = 0;
+	while (array[counter])
+	{
+		counter++;
+		if (array[counter] == NULL)
+			break ;
+	}
+	return (counter);
 }

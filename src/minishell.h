@@ -101,7 +101,6 @@ void				set_signals_child(void);
 void				set_signals_exec(void);
 char				is_empty_command(char *input);
 char				does_env_exist(char **envs, char *name);
-int					count_args(char **args);
 
 extern int heredoc_sigint;
 
