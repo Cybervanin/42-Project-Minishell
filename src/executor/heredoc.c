@@ -12,8 +12,6 @@
 
 #include "../minishell.h"
 
-int heredoc_sigint = 0;
-
 static void	expand_line(char **line, t_ms *shell)
 {
 	int	i;
@@ -71,7 +69,7 @@ static int	handle_heredoc(char *delimiter, t_ms *shell)
 	set_signals();
 	close(fd[1]);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT) {
-    heredoc_sigint = 1;
+    sigint = 1;
     close(fd[0]);
     return (-1);
   }

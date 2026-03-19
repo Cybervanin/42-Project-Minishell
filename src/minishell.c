@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int sigint = 0;
+
 void	shell_loop(t_ms *shell)
 {
 	char	*input;
@@ -25,6 +27,7 @@ void	shell_loop(t_ms *shell)
 			printf("exit\n");
 			break ;
 		}
+		handle_sigint_last_status(shell);
 		if (is_empty_command(input))
 			continue;
 		if (*input)

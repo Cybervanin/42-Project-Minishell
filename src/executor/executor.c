@@ -76,9 +76,10 @@ static void	single_cmd_exec(t_ms *shell)
 
 	if (shell->cmd_list->redirs && apply_redirects(shell) < 0)
 	{
-		if (heredoc_sigint) {
-      heredoc_sigint = 0;
+		if (sigint) {
+      sigint = 0;
 			printf("> \n");
+			shell->last_status = 130;
       return;
     }
 		exit(EXIT_FAILURE);

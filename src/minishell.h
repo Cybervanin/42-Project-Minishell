@@ -101,7 +101,8 @@ void				set_signals_child(void);
 void				set_signals_exec(void);
 char				is_empty_command(char *input);
 char				does_env_exist(char **envs, char *name);
+void				handle_sigint_last_status(t_ms *shell);
 
-extern int heredoc_sigint;
+extern int sigint;
 
 #endif

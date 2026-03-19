@@ -12,10 +12,20 @@
 
 #include "../minishell.h"
 
+void handle_sigint_last_status(t_ms *shell)
+{
+	if (sigint == 1)
+		{
+      sigint = 0;
+			shell->last_status = 130;
+		}
+}
+
 void sigint_handler(int sig)
 {
 	(void)sig;
 
+	sigint = 1;
 	rl_on_new_line();
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
