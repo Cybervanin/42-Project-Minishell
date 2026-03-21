@@ -12,26 +12,27 @@
 
 #include "../minishell.h"
 
-void	free_minishell_memory(t_ms *shell)
+void free_cmd_list(t_cmd *cmd_list)
 {
-	int i;
+	t_cmd *cmd;
+	t_cmd *temp;
+	t_redir *temp_redir;
 
-	i = 0;
-	if (shell->cmd_list)
+	cmd = cmd_list;
+	while (cmd)
 	{
-		free_matrix(shell->cmd_list->args);
-		if (shell->cmd_list->redirs)
-			while (shell->cmd_list->redirs[i].target)
-			{
-				free(shell->cmd_list->redirs[i].target);
-				free(shell->cmd_list->redirs[i++].next);
-			}
-		free(shell->cmd_list->redirs);
-		free(shell->cmd_list);
+		temp = cmd->next;
+		free_matrix(cmd->args);
+		while (cmd->redirs)
+		{
+			temp_redir = cmd->redirs->next;
+			free(cmd->redirs->target);
+			free(cmd->redirs);
+			cmd->redirs = temp_redir;
+		}
+		free(cmd);
+		cmd = temp;
 	}
-	if (shell->envs)
-		free_matrix(shell->envs);
-	free(shell);
 }
 
 void free_token_list(t_token *token_list)
