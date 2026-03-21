@@ -79,20 +79,20 @@ static void	parse_token_to_cmd(t_token *token_list, t_cmd *cmd, int *i)
 
 t_cmd	*parser(t_token *token_list)
 {
-	t_cmd	*head;
+	t_cmd	*first;
 	t_cmd	*last;
 	int		i;
 	int		total_args;
 	t_cmd	*new;
 
 	i = 0;
-	head = NULL;
+	first = NULL;
 	last = NULL;
 	while (token_list[i].value != NULL)
 	{
 		new = ft_calloc(sizeof(t_cmd), 1);
-		if (head == NULL)
-			head = new;
+		if (first == NULL)
+			first = new;
 		else
 			last->next = new;
 		last = new;
@@ -102,5 +102,5 @@ t_cmd	*parser(t_token *token_list)
 		if (token_list[i].value != NULL && token_list[i].type == PIPE)
 			i++;
 	}
-	return (head);
+	return (first);
 }
