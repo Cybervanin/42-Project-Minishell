@@ -100,14 +100,16 @@ static void	single_cmd_exec(t_ms *shell)
 static void	await_results(t_ms *shell, pid_t child_pid)
 {
 	int	return_status;
+	t_cmd	*current;
 
-	while (shell->cmd_list->next)
+	current = shell->cmd_list;
+	while (current->next)
 	{
 		while (wait(NULL) == -1) {
       if (errno != EINTR)
         break;
     }
-		shell->cmd_list = shell->cmd_list->next;
+		current = current->next;
 	}
 	while (waitpid(child_pid, &return_status, 0) == -1)
     if (errno != EINTR)
