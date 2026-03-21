@@ -17,7 +17,7 @@ SRCS 			= src/minishell.c \
 						src/helpers/heredoc_helpers.c \
 						src/helpers/exec_helpers.c \
 						src/helpers/shell_helpers.c \
-						src/helpers/cleaners.c \
+						src/helpers/memory_cleaners.c \
 						src/parser/parser.c \
 						src/parser/expander.c \
 						src/executor/executor.c \
