@@ -48,7 +48,7 @@ static pid_t	multi_cmd_exec(t_ms *shell)
 		if (child_id == 0)
 		{
 			close(fd[0]);
-			if (shell->cmd_list->next)
+			if (get_env_val("PATH", shell) && shell->cmd_list->next)
 				dup2(fd[1], STDOUT_FILENO);
 			close(fd[1]);
 			piece_cmd_exec(shell);
