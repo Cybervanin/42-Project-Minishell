@@ -50,7 +50,7 @@ static void	read_heredoc(int *fd, char *delimiter, t_ms *shell)
 	exit(0);
 }
 
-static char get_fork_return(pid_t heredoc_pid)
+static char get_fork_return(pid_t heredoc_pid, t_ms *shell, int *fd)
 {
 	int			status;
 
@@ -88,7 +88,7 @@ static int	handle_heredoc(char *delimiter, t_ms *shell)
 	if (heredoc_pid == 0)
 		read_heredoc(fd, delimiter, shell);
 	set_signals_exec();
-	if (get_fork_return(heredoc_pid) < 0)
+	if (get_fork_return(heredoc_pid, shell, fd) < 0)
 		return (-1);
 	close(fd[1]);
 	set_signals();
