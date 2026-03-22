@@ -11,6 +11,12 @@ void builtin_exit(t_ms *shell)
     printf("exit: too many arguments\n");
     return ;
   }
+  else if (!ft_isdigit(ft_atoi(shell->cmd_list->args[1])))
+  {
+    shell->last_status = 1;
+    printf("exit: %s: numeric argument required\n", shell->cmd_list->args[1]);
+    return ;
+  }
   exit_status = 0;
   if (shell->cmd_list->args[1])
     exit_status = ft_atoi(shell->cmd_list->args[1]);
