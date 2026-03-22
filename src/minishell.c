@@ -3,19 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:13:46 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/17 19:56:39 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/22 14:24:05 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static int	process_input(char *input, t_ms *shell)
+{
+	t_token	*token_list;
+
+	if (is_empty_command(input))
+		return (free(input), 0);
+	if (*input)
+		add_history(input);
+	token_list = lexit(input);
+	free(input);
+	if (!token_list)
+		return (0);
+	shell->cmd_list = parser(token_list);
+	free(token_list);
+	if (!shell->cmd_list)
+		return (0);
+	expander(shell);
+	executor(shell);
+	return (0);
+}
+
 void	shell_loop(t_ms *shell)
 {
 	char	*input;
-	t_token	*token_list;
 
 	set_signals();
 	while (1)
@@ -26,18 +46,7 @@ void	shell_loop(t_ms *shell)
 			printf("exit\n");
 			break ;
 		}
-		if (is_empty_command(input))
-			continue;
-		if (*input)
-			add_history(input);
-		token_list = lexit(input);
-		if (!token_list)
-			continue;
-		free(input);
-		shell->cmd_list = parser(token_list);
-		free(token_list);
-		expander(shell);
-		executor(shell);
+		process_input(input, shell);
 	}
 }
 
