@@ -2,14 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+        
-	+:+     */
-/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+      
-	+#+        */
-/*                                                +#+#+#+#+#+  
-	+#+           */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 09:56:39 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/07 09:56:39 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/22 14:40:00 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,29 +31,34 @@ static int	count_token_args(t_token *token_list, int i)
 	return (arg_count);
 }
 
-static void	add_new_redir(t_token *token_list, t_cmd *cmd, int *i)
+static int	add_new_redir(t_token *token_list, t_cmd *cmd, int *i)
 {
 	t_redir	*novo;
 	t_redir	*ultimo;
 
-	novo = ft_calloc(sizeof(t_redir), 2);
+	if (token_list[*i + 1].value == NULL)
+		return (printf("minishell: syntax error near unexpected token 'newline'\n"), 1);
+	if (token_list[*i + 1].type != WORD)
+		return (printf("minishell: syntax error near unexpected token '%s'\n",
+			token_list[*i + 1].value), 1);
+	novo = ft_calloc(1, sizeof(t_redir));
 	if (!novo)
-		return ;
+		return (1);
 	novo->type = token_list[*i].type;
 	novo->target = ft_strdup(token_list[*i + 1].value);
+	if (!novo->target)
+		return (free(novo), 1);
 	novo->next = NULL;
 	if (cmd->redirs == NULL)
-		cmd->redirs = novo;
-	else
-	{
-		ultimo = cmd->redirs;
-		while (ultimo->next != NULL)
-			ultimo = ultimo->next;
-		ultimo->next = novo;
-	}
+		return (cmd->redirs = novo, 0);
+	ultimo = cmd->redirs;
+	while (ultimo->next != NULL)
+		ultimo = ultimo->next;
+	ultimo->next = novo;
+	return (0);
 }
 
-static void	parse_token_to_cmd(t_token *token_list, t_cmd *cmd, int *i)
+static int	parse_token_to_cmd(t_token *token_list, t_cmd *cmd, int *i)
 {
 	int	args_id;
 
@@ -66,15 +68,38 @@ static void	parse_token_to_cmd(t_token *token_list, t_cmd *cmd, int *i)
 		if (token_list[*i].type == WORD)
 		{
 			cmd->args[args_id++] = ft_strdup(token_list[*i].value);
+			if (!cmd->args[args_id - 1])
+				return (1);
 			*i += 1;
 		}
 		else
 		{
-			add_new_redir(token_list, cmd, i);
+			if (add_new_redir(token_list, cmd, i) != 0)
+				return (1);
 			*i += 2;
 		}
 	}
 	cmd->args[args_id] = NULL;
+	return (0);
+}
+
+static int	create_and_parse_cmd(t_token *token_list, t_cmd **last, int *i)
+{
+	t_cmd	*new;
+
+	new = ft_calloc(1, sizeof(t_cmd));
+	if (!new)
+		return (1);
+	new->args = ft_calloc(sizeof(char *), count_token_args(token_list, *i) + 1);
+	if (!new->args || parse_token_to_cmd(token_list, new, i) != 0)
+		return (free(new->args), free(new), 1);
+	new->next = NULL;
+	if (*last)
+		(*last)->next = new;
+	*last = new;
+	if (token_list[*i].value != NULL && token_list[*i].type == PIPE)
+		(*i)++;
+	return (0);
 }
 
 t_cmd	*parser(t_token *token_list)
@@ -82,25 +107,16 @@ t_cmd	*parser(t_token *token_list)
 	t_cmd	*first;
 	t_cmd	*last;
 	int		i;
-	int		total_args;
-	t_cmd	*new;
 
 	i = 0;
 	first = NULL;
 	last = NULL;
 	while (token_list[i].value != NULL)
 	{
-		new = ft_calloc(sizeof(t_cmd), 1);
-		if (first == NULL)
-			first = new;
-		else
-			last->next = new;
-		last = new;
-		total_args = count_token_args(token_list, i);
-		new->args = ft_calloc(sizeof(char *), total_args + 1);
-		parse_token_to_cmd(token_list, new, &i);
-		if (token_list[i].value != NULL && token_list[i].type == PIPE)
-			i++;
+		if (create_and_parse_cmd(token_list, &last, &i) != 0)
+			return (NULL);
+		if (!first)
+			first = last;
 	}
 	return (first);
 }

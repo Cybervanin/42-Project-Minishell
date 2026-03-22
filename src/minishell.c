@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:13:46 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/17 19:56:39 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/22 15:20:08 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,20 @@ int shell_execution(char *input, t_ms *shell)
 
 	token_list = lexit(input);
 	if (!token_list)
-		return 1;
+	{
+		free(input);
+		return (1);
+	}
 	free(input);
 	shell->cmd_list = parser(token_list);
 	free_token_list(token_list);
+	if (!shell->cmd_list)
+		return (1);
 	expander(shell);
 	executor(shell);
 	free_cmd_list(shell->cmd_list);
 	shell->cmd_list = NULL;
-	return 0;
+	return (0);
 }
 
 void	shell_loop(t_ms *shell)
