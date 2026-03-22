@@ -17,7 +17,6 @@
 
 static void	piece_cmd_exec(t_ms *shell)
 {
-	char	**path_dirs;
 	char	*command_path;
 
 	if (shell->cmd_list->redirs && apply_redirects(shell) < 0)
@@ -29,13 +28,9 @@ static void	piece_cmd_exec(t_ms *shell)
 	}
 	else
 	{
-		path_dirs = get_path_dirs(shell);
-		command_path = get_full_command_path(shell->cmd_list->args[0],
-				path_dirs);
-		free_matrix(path_dirs);
+		command_path = get_full_cmd_path(shell);
 		execve(command_path, shell->cmd_list->args, shell->envs);
 		free(command_path);
-		perror("execve");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -71,7 +66,6 @@ static pid_t	multi_cmd_exec(t_ms *shell)
 
 static void	single_cmd_exec(t_ms *shell)
 {
-	char	**path_dirs;
 	char	*command_path;
 
 	if (shell->cmd_list->redirs && apply_redirects(shell) < 0)
@@ -88,10 +82,7 @@ static void	single_cmd_exec(t_ms *shell)
 		call_builtins(shell);
 	else
 	{
-		path_dirs = get_path_dirs(shell);
-		command_path = get_full_command_path(shell->cmd_list->args[0],
-				path_dirs);
-		free_matrix(path_dirs);
+		command_path = get_full_cmd_path(shell);
 		call_path(shell, command_path);
 		free(command_path);
 	}

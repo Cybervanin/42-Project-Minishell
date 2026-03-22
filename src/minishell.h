@@ -93,7 +93,7 @@ char				is_delimiter_quotted(char *delimiter);
 char				heredoc_stop_condition(char *line, char *delimiter);
 void				call_path(t_ms *shell, char *cmd);
 char				**get_path_dirs(t_ms *shell);
-char				*get_full_command_path(char *cmd, char **path_dirs);
+char				*get_full_cmd_path(t_ms *shell);
 void				call_builtins(t_ms *shell);
 void				sigint_handler(int sig);
 void				set_signals(void);
