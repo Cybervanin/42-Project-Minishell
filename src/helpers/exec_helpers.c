@@ -58,6 +58,7 @@ void	call_path(t_ms *shell, char *cmd_path)
 	if (!cmd_path || !shell->cmd_list->args || !shell->cmd_list->args[0])
 	{
 		printf("%s: command not found\n", shell->cmd_list->args[0]);
+		shell->last_status = 127;
 		return ;
 	}
 	child_pid = fork();
