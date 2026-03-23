@@ -43,10 +43,7 @@ static char *mount_full_path(t_ms *shell, char **path_dirs)
 		full_path = ft_strjoin(temp, shell->cmd_list->args[0]);
 		free(temp);
 		if (access(full_path, F_OK | X_OK) == 0)
-		{
-			free_matrix(path_dirs);
 			return (full_path);
-		}
 		free(full_path);
 		i++;
 	}
