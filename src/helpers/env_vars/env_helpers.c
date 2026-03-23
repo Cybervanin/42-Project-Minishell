@@ -52,7 +52,10 @@ static char	**reallocate_env(char *old_envs[], char *new_entry)
 		i++;
 	new_envs = malloc(sizeof(char *) * (i + 2));
 	if (!new_envs)
+	{
+		free(new_entry);
 		return (old_envs);
+	}
 	i = 0;
 	while (old_envs[i])
 	{

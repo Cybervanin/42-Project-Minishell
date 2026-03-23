@@ -92,7 +92,7 @@ static int	create_and_parse_cmd(t_token *token_list, t_cmd **last, int *i)
 		return (1);
 	new->args = ft_calloc(sizeof(char *), count_token_args(token_list, *i) + 1);
 	if (!new->args || parse_token_to_cmd(token_list, new, i) != 0)
-		return (free(new->args), free(new), 1);
+		return (free_cmd_list(new), 1);
 	new->next = NULL;
 	if (*last)
 		(*last)->next = new;
@@ -114,7 +114,10 @@ t_cmd	*parser(t_token *token_list)
 	while (token_list[i].value != NULL)
 	{
 		if (create_and_parse_cmd(token_list, &last, &i) != 0)
+		{
+			free_cmd_list(first);
 			return (NULL);
+		}
 		if (!first)
 			first = last;
 	}

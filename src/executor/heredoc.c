@@ -6,7 +6,7 @@
 /*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 09:55:52 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/22 14:53:28 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/23 18:48:01 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,11 @@ static int	handle_heredoc(char *delimiter, t_ms *shell)
 		read_heredoc(fd, delimiter, shell);
 	set_signals_exec();
 	if (get_fork_return(heredoc_pid, shell, fd) < 0)
+	{
+		close(fd[1]);
+		set_signals();
 		return (-1);
+	}
 	close(fd[1]);
 	set_signals();
 	return (fd[0]);

@@ -47,6 +47,7 @@ static pid_t	multi_cmd_exec(t_ms *shell)
 		child_id = fork();
 		if (child_id == 0)
 		{
+			
 			set_signals_child();
 			close(fd[0]);
 			if (get_env_val("PATH", shell) && shell->cmd_list->next)

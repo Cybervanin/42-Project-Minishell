@@ -4,9 +4,13 @@ char	heredoc_stop_condition(char *line, char *delimiter)
 {
 	char	*unquoted_delimiter;
 
+	unquoted_delimiter = NULL;
+
 	if (is_delimiter_quotted(delimiter))
 	{
 		unquoted_delimiter = remove_quotes(delimiter);
+		if (!unquoted_delimiter)
+			return (0);
 		if (ft_strncmp(line, unquoted_delimiter,
 				ft_strlen(unquoted_delimiter)) == 0
 			&& ft_strlen(line) == ft_strlen(unquoted_delimiter))
@@ -14,10 +18,10 @@ char	heredoc_stop_condition(char *line, char *delimiter)
 			free(unquoted_delimiter);
 			return (1);
 		}
+		free(unquoted_delimiter);
 	}
 	else
 	{
-		(void)unquoted_delimiter;
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
 			&& ft_strlen(line) == ft_strlen(delimiter))
 			return (1);

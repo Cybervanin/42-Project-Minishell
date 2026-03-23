@@ -6,7 +6,7 @@
 /*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:13:46 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/22 15:20:08 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/23 18:45:05 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ void	shell_loop(t_ms *shell)
 		}
 		handle_sigint_last_status(shell);
 		if (is_empty_command(input))
+		{
+			free(input);
 			continue;
+		}
 		if (*input)
 			add_history(input);
 		shell_execution(input, shell);

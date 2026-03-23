@@ -6,7 +6,7 @@
 /*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:15:37 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/22 16:56:49 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/23 19:05:16 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,9 @@ char	*remove_quotes(char *input)
 	i = 0;
 	j = 0;
 	len = ft_strlen(input);
-	no_quotes = ft_calloc(sizeof(char), len - 1);
+	no_quotes = ft_calloc(sizeof(char), len + 1);
+	if (!no_quotes)
+		return (NULL);
 	while(input[i])
 	{
 		if (input[i] == '"')
