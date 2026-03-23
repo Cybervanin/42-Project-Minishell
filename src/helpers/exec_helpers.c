@@ -50,19 +50,19 @@ static void get_return_status(t_ms *shell, int return_status)
 	shell->last_status = return_status_code;
 }
 
-void	call_path(t_ms *shell, char *cmd)
+void	call_path(t_ms *shell, char *cmd_path)
 {
 	int		return_status;
 	pid_t	child_pid;
 
-	if (!cmd || !shell->cmd_list->args || !shell->cmd_list->args[0])
+	if (!cmd_path || !shell->cmd_list->args || !shell->cmd_list->args[0])
 		return ;
 	child_pid = fork();
 	if (child_pid == 0)
 	{
 		set_signals_child();
-		execve(cmd, shell->cmd_list->args, shell->envs);
-		perror(cmd);
+		execve(cmd_path, shell->cmd_list->args, shell->envs);
+		perror(cmd_path);
 	}
 	set_signals_exec();
 	while (waitpid(child_pid, &return_status, 0) == -1)
