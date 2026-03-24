@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path_env_helpers.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/24 19:45:08 by jode-cas          #+#    #+#             */
+/*   Updated: 2026/03/24 19:52:52 by jode-cas         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../minishell.h"
 
 char	**get_path_dirs(t_ms *shell)
@@ -18,11 +30,10 @@ char	**get_path_dirs(t_ms *shell)
 	return (splitted_path);
 }
 
-static char *handle_file(t_ms *shell)
+static char	*handle_file(t_ms *shell)
 {
-	if (shell->cmd_list->args[0] &&
-		(shell->cmd_list->args[0][0] == '/' ||
-		shell->cmd_list->args[0][0] == '.'))
+	if (shell->cmd_list->args[0] && (shell->cmd_list->args[0][0] == '/'
+		|| shell->cmd_list->args[0][0] == '.'))
 	{
 		if (access(shell->cmd_list->args[0], F_OK | X_OK) == 0)
 			return (ft_strdup(shell->cmd_list->args[0]));
@@ -30,7 +41,7 @@ static char *handle_file(t_ms *shell)
 	return (NULL);
 }
 
-static char *mount_full_path(t_ms *shell, char **path_dirs)
+static char	*mount_full_path(t_ms *shell, char **path_dirs)
 {
 	int		i;
 	char	*full_path;
@@ -52,13 +63,13 @@ static char *mount_full_path(t_ms *shell, char **path_dirs)
 
 char	*get_full_cmd_path(t_ms *shell)
 {
-	char *file;
-	char **path_dirs;
+	char	*file;
+	char	**path_dirs;
 	char	*full_path;
 
 	file = handle_file(shell);
 	if (file != NULL)
-		return file;
+		return (file);
 	free(file);
 	path_dirs = get_path_dirs(shell);
 	if (!path_dirs)

@@ -6,12 +6,11 @@
 /*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 17:42:23 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/02 17:42:23 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/24 19:43:55 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
 
 t_token_type	get_token_type(char *word)
 {

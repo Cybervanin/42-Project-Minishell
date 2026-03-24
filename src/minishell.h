@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:13:10 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/22 14:31:56 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/24 19:53:37 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,6 @@ void				handle_sigint_last_status(t_ms *shell);
 void				free_token_list(t_token *token_list);
 void				free_cmd_list(t_cmd *cmd_list);
 
-extern int sigint;
+extern int	g_sigint;
 
 #endif

@@ -1,5 +1,5 @@
 /* ************************************************************************** */
-/*	                                                                        */
+/*		                                                                     */
 /*                                                        :::      ::::::::   */
 /*   exec_helpers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -32,9 +32,9 @@ void	call_builtins(t_ms *shell)
 		builtin_exit(shell);
 }
 
-static void get_return_status(t_ms *shell, int return_status)
+static void	get_return_status(t_ms *shell, int return_status)
 {
-	int return_status_code;
+	int	return_status_code;
 
 	return_status_code = 0;
 	if (WIFEXITED(return_status))
@@ -70,8 +70,8 @@ void	call_path(t_ms *shell, char *cmd_path)
 	}
 	set_signals_exec();
 	while (waitpid(child_pid, &return_status, 0) == -1)
-	if (errno != EINTR)
-			break;
+		if (errno != EINTR)
+			break ;
 	set_signals();
 	get_return_status(shell, return_status);
 }

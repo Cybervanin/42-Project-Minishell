@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_helpers.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/24 19:44:58 by jode-cas          #+#    #+#             */
+/*   Updated: 2026/03/24 19:44:58 by jode-cas         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	heredoc_stop_condition(char *line, char *delimiter)
@@ -5,7 +17,6 @@ char	heredoc_stop_condition(char *line, char *delimiter)
 	char	*unquoted_delimiter;
 
 	unquoted_delimiter = NULL;
-
 	if (is_delimiter_quotted(delimiter))
 	{
 		unquoted_delimiter = remove_quotes(delimiter);

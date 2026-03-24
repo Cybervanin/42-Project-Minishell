@@ -2,9 +2,12 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                                    +:+ +:+
+	+:+     */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+
+	+#+        */
+/*                                                +#+#+#+#+#+
+	+#+           */
 /*   Created: 2026/03/07 09:56:39 by jode-cas          #+#    #+#             */
 /*   Updated: 2026/03/22 14:40:00 by victde-s         ###   ########.fr       */
 /*                                                                            */
@@ -37,10 +40,12 @@ static int	add_new_redir(t_token *token_list, t_cmd *cmd, int *i)
 	t_redir	*ultimo;
 
 	if (token_list[*i + 1].value == NULL)
-		return (printf("minishell: syntax error near unexpected token 'newline'\n"), 1);
-	if (token_list[*i + 1].type != WORD)
-		return (printf("minishell: syntax error near unexpected token '%s'\n",
-			token_list[*i + 1].value), 1);
+		printf("minishell: syntax error near unexpected token 'newline'\n");
+	else if (token_list[*i + 1].type != WORD)
+		printf("minishell: syntax error near unexpected token '%s'\n",
+			token_list[*i + 1].value);
+	if (token_list[*i + 1].value == NULL || token_list[*i + 1].type != WORD)
+		return (1);
 	novo = ft_calloc(1, sizeof(t_redir));
 	if (!novo)
 		return (1);

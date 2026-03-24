@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   universal_helpers.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:15:37 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/23 19:05:16 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/24 19:44:45 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	*remove_quotes(char *input)
 		if (input[i] == '"' || input[i] == '\'')
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		no_quotes[j] = input[i];
 		i++;

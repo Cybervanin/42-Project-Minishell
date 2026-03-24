@@ -1,22 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleaners.c                                         :+:      :+:    :+:   */
+/*   memory_cleaners.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:23:20 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/17 19:57:30 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/24 19:44:28 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void free_cmd_list(t_cmd *cmd_list)
+void	free_cmd_list(t_cmd *cmd_list)
 {
-	t_cmd *cmd;
-	t_cmd *temp;
-	t_redir *temp_redir;
+	t_cmd	*cmd;
+	t_cmd	*temp;
+	t_redir	*temp_redir;
 
 	cmd = cmd_list;
 	while (cmd)
@@ -35,9 +35,9 @@ void free_cmd_list(t_cmd *cmd_list)
 	}
 }
 
-void free_token_list(t_token *token_list)
+void	free_token_list(t_token *token_list)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (token_list)

@@ -71,11 +71,12 @@ static void	single_cmd_exec(t_ms *shell)
 	expander(shell);
 	if (shell->cmd_list->redirs && apply_redirects(shell) < 0)
 	{
-		if (sigint) {
-	  	sigint = 0;
+		if (g_sigint)
+		{
+			g_sigint = 0;
 			printf("> \n");
 			shell->last_status = 130;
-	  	return;
+			return ;
 		}
 		exit(EXIT_FAILURE);
 	}

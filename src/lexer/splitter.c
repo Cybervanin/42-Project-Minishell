@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   splitter.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 17:41:46 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/22 13:42:43 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/24 19:43:44 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ static char	*find_token_end(char *s)
 	i = 0;
 	if (is_metachar(s[i]))
 	{
-		if ((s[i] == '>' && s[i + 1] == '>' && !is_metachar(s[i + 2])) || (s[i] == '<' && s[i
-				+ 1] == '<' && !is_metachar(s[i + 2])))
+		if ((s[i] == '>' && s[i + 1] == '>' && !is_metachar(s[i + 2]))
+			|| (s[i] == '<' && s[i + 1] == '<' && !is_metachar(s[i + 2])))
 			return (s + 2);
 		return (s + 1);
 	}

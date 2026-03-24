@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 09:55:52 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/23 18:48:01 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/24 19:43:04 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 static void	expand_line(char **line, t_ms *shell)
 {
 	int	i;
@@ -50,31 +51,32 @@ static void	read_heredoc(int *fd, char *delimiter, t_ms *shell)
 	exit(0);
 }
 
-static char get_fork_return(pid_t heredoc_pid, t_ms *shell, int *fd)
+static char	get_fork_return(pid_t heredoc_pid, t_ms *shell, int *fd)
 {
-	int			status;
+	int	status;
 
 	status = 0;
 	while (waitpid(heredoc_pid, &status, 0) == -1)
 	{
 		if (errno != EINTR)
-			break;
+			break ;
 	}
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		sigint = 1;
+		g_sigint = 1;
 	if (WIFSIGNALED(status))
 	{
 		shell->last_status = 128 + WTERMSIG(status);
 		close(fd[0]);
 		return (-1);
 	}
-	return 0;
+	return (0);
 }
 
 static int	handle_heredoc(char *delimiter, t_ms *shell)
 {
-	pid_t		heredoc_pid;
-	int			fd[2];
+	pid_t	heredoc_pid;
+	int		fd[2];
+
 	if (pipe(fd) < 0)
 		return (-1);
 	heredoc_pid = fork();

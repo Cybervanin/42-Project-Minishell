@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:13:46 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/23 18:45:05 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/24 19:43:04 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int sigint = 0;
+int		g_sigint = 0;
 
-int shell_execution(char *input, t_ms *shell)
+int	shell_execution(char *input, t_ms *shell)
 {
 	t_token	*token_list;
 
@@ -51,7 +51,7 @@ void	shell_loop(t_ms *shell)
 		if (is_empty_command(input))
 		{
 			free(input);
-			continue;
+			continue ;
 		}
 		if (*input)
 			add_history(input);
