@@ -36,7 +36,8 @@ static void	piece_cmd_exec(t_ms *shell, int *fd)
 		command_path = get_full_cmd_path(shell);
 		execve(command_path, shell->cmd_list->args, shell->envs);
 		free(command_path);
-		exit(EXIT_FAILURE);
+		shell->last_status = EXIT_FAILURE;
+		exit(shell->last_status);
 	}
 }
 
@@ -53,6 +54,11 @@ static pid_t	multi_cmd_exec(t_ms *shell)
 		child_id = fork();
 		if (child_id == 0)
 			piece_cmd_exec(shell, fd);
+		if (shell->last_status != 0)
+		{
+			close(fd[1]);
+			break ;
+		}
 		if (shell->cmd_list->next)
 		{
 			dup2(fd[0], STDIN_FILENO);
