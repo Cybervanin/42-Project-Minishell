@@ -12,12 +12,25 @@
 
 #include "../../minishell.h"
 
+static char had_too_many_arguments(char **args, t_ms *shell)
+{
+	if (array_length(args) > 2)
+	{
+		ft_putstr_fd("cd: too many arguments\n", 2);
+		shell->last_status = 1;
+		return 1;
+	}
+	return 0;
+}
+
 void	builtin_cd(char **args, t_ms *shell)
 {
 	char	cwd[1024];
 	char	*oldpwd;
 	char	*dest;
 
+	if(had_too_many_arguments(args, shell))
+		return ;
 	oldpwd = getcwd(cwd, sizeof(cwd));
 	if (!args[1])
 		dest = get_env_val("HOME", shell);
