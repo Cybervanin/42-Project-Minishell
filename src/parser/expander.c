@@ -53,10 +53,20 @@ void	rebuild_string(char **og_str, int i, t_ms *shell)
 	t_env_breakpoints	breakpoints;
 
 	env_start = i;
-	while ((*og_str)[i + 1] && (*og_str)[i + 1] != ' ' && (*og_str)[i
-		+ 1] != '"' && (*og_str)[i + 1] != '\'')
+	if (!(*og_str)[i + 1])
+		return ;	
+	if ((*og_str)[i + 1] == '?')
+		env_end = i + 1;
+	else if (ft_isalpha((*og_str)[i + 1]) || (*og_str)[i + 1] == '_')
+	{
 		i++;
-	env_end = i;
+		while ((*og_str)[i + 1] && (ft_isalnum((*og_str)[i + 1])
+				|| (*og_str)[i + 1] == '_'))
+			i++;
+		env_end = i;
+	}
+	else
+		return ;
 	while ((*og_str)[i])
 		i++;
 	breakpoints.i = i;
