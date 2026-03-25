@@ -110,6 +110,7 @@ static void	strip_arg_quotes(char **arg)
 void	expander(t_ms *shell)
 {
 	int		j;
+	t_redir	*redir;
 
 	j = 0;
 	while (shell->cmd_list->args[j])
@@ -117,5 +118,12 @@ void	expander(t_ms *shell)
 		expand_arg(&(shell->cmd_list->args[j]), shell);
 		strip_arg_quotes(&(shell->cmd_list->args[j]));
 		j++;
+	}
+	redir = shell->cmd_list->redirs;
+	while (redir)
+	{
+		expand_arg(&(redir->target), shell);
+		strip_arg_quotes(&(redir->target));
+		redir = redir->next;
 	}
 }
