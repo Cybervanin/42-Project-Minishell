@@ -25,3 +25,12 @@ int	array_length(char **array)
 	}
 	return (counter);
 }
+
+void display_error(char *str, const char *error_msg)
+{
+	char *result;
+
+	result = ft_strjoin(str, error_msg);
+	ft_putstr_fd(result ,2);
+	free(result);
+}

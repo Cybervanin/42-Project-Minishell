@@ -54,13 +54,10 @@ void	call_path(t_ms *shell, char *cmd_path)
 {
 	int		return_status;
 	pid_t	child_pid;
-	char *error_msg;
 
 	if (!cmd_path || !shell->cmd_list->args || !shell->cmd_list->args[0])
 	{
-		error_msg = ft_strjoin(shell->cmd_list->args[0], ": command not found\n");
-		ft_putstr_fd(error_msg, 2);
-		free(error_msg);
+		display_error(shell->cmd_list->args[0], ": command not found\n");
 		shell->last_status = 127;
 		return ;
 	}

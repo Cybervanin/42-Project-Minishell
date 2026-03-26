@@ -105,6 +105,7 @@ char				does_env_exist(char **envs, char *name);
 void				handle_sigint_last_status(t_ms *shell);
 void				free_token_list(t_token *token_list);
 void				free_cmd_list(t_cmd *cmd_list);
+void 				display_error(char *str, const char *error_msg);
 
 extern int	g_sigint;
 

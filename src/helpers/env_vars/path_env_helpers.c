@@ -16,14 +16,11 @@ char	**get_path_dirs(t_ms *shell)
 {
 	char	*path;
 	char	**splitted_path;
-	char *error_msg;
 
 	path = get_env_val("PATH", shell);
 	if (!path)
 	{
-		error_msg = ft_strjoin(shell->cmd_list->args[0], ": No such file or directory\n");
-		ft_putstr_fd(error_msg, 2);
-		free(error_msg);
+		display_error(shell->cmd_list->args[0], ": No such file or directory\n");
 		shell->last_status = 127;
 		return (NULL);
 	}
