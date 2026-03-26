@@ -53,7 +53,7 @@ char	is_empty_command(char *input)
 	{
 		while (input[i])
 		{
-			if (ft_isalnum(input[i]))
+			if (ft_isprint(input[i]))
 				is_empty = 0;
 			i++;
 		}
