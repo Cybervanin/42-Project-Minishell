@@ -37,6 +37,8 @@ t_ms	*create_shell_instance(char **envs)
 	shell = ft_calloc(sizeof(t_ms), 2);
 	store_envs(shell, envs);
 	shell->last_status = 0;
+	shell->initial_stdout = 1;
+	shell->initial_stdin = 0;
 	return (shell);
 }
 

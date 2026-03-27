@@ -60,6 +60,8 @@ typedef struct s_minishell
 	char			**envs;
 	int				last_status;
 	struct s_cmd	*cmd_list;
+	int				initial_stdout;
+	int				initial_stdin;
 }					t_ms;
 
 t_token				*lexit(char *input);

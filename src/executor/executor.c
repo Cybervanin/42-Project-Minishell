@@ -21,6 +21,8 @@ static void	piece_cmd_exec(t_ms *shell, int *fd)
 
 	set_signals_child();
 	close(fd[0]);
+	close(shell->initial_stdout);
+	close(shell->initial_stdin);
 	if (get_env_val("PATH", shell) && shell->cmd_list->next)
 		dup2(fd[1], STDOUT_FILENO);
 	close(fd[1]);
@@ -104,8 +106,8 @@ void	executor(t_ms *shell)
 	t_cmd	*first;
 
 	first = shell->cmd_list;
-	initial_stdout = dup(STDOUT_FILENO);
-	initial_stdin = dup(STDIN_FILENO);
+	shell->initial_stdout = dup(STDOUT_FILENO);
+	shell->initial_stdin = dup(STDIN_FILENO);
 	if (shell->cmd_list->next)
 	{
 		set_signals_exec();
@@ -116,8 +118,8 @@ void	executor(t_ms *shell)
 	}
 	else
 		single_cmd_exec(shell);
-	dup2(initial_stdout, STDOUT_FILENO);
-	close(initial_stdout);
-	dup2(initial_stdin, STDIN_FILENO);
-	close(initial_stdin);
+	dup2(shell->initial_stdout, STDOUT_FILENO);
+	close(shell->initial_stdout);
+	dup2(shell->initial_stdin, STDIN_FILENO);
+	close(shell->initial_stdin);
 }
