@@ -61,12 +61,13 @@ static void	execute_child(t_ms *shell, char *cmd_path)
 		exit(126);
 	}
 	execve(cmd_path, shell->cmd_list->args, shell->envs);
-	perror(cmd_path);
 	if (errno == EACCES)
+	{
+		display_error(cmd_path, ": Permission denied\n");
 		exit(126);
-	else if (errno == ENOENT)
-		exit (127);
-	exit(127);
+	}
+	display_error(cmd_path, ": No such file or directory\n");
+	exit (127);
 }
 
 void	call_path(t_ms *shell, char *cmd_path)
