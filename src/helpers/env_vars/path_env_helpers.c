@@ -6,7 +6,7 @@
 /*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 19:45:08 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/24 19:52:52 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/27 14:10:19 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,7 @@ char	**get_path_dirs(t_ms *shell)
 
 static char	*handle_file(t_ms *shell)
 {
-	if (shell->cmd_list->args[0] && (shell->cmd_list->args[0][0] == '/'
-		|| shell->cmd_list->args[0][0] == '.'))
+	if (shell->cmd_list->args[0] && shell->cmd_list->args[0][0] == '.')
 	{
 		if (access(shell->cmd_list->args[0], F_OK | X_OK) == 0)
 			return (ft_strdup(shell->cmd_list->args[0]));
