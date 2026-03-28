@@ -6,7 +6,7 @@
 /*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 19:44:58 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/28 16:56:48 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/28 17:26:58 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,25 +77,24 @@ void	heredoc_loop(int *fd, char *delimiter, t_ms *shell)
 	int		line_count;
 
 	line_count = 0;
-	while (1)
+	line = readline("> ");
+	while (line)
 	{
-		line = readline("> ");
-		if (!line)
-		{
-			printf("minishell warning: here-document at line %d delimited"
-				" by end-of-file (wanted `%s')\n", ++line_count,
-				delimiter);
-			break ;
-		}
+		line_count += 1;
 		if (heredoc_stop_condition(line, delimiter))
 		{
 			free(line);
-			break ;
+			return ;
 		}
 		if (!is_delimiter_quotted(delimiter))
 			expand_line(&line, shell);
-		write(fd[1], line, ft_strlen(line));
+		ft_putstr_fd(line, fd[1]);
 		write(fd[1], "\n", 1);
 		free(line);
+		line = readline("> ");
 	}
+	printf("minishell warning: here-document at line %d delimited"
+			" by end-of-file (wanted `%s')\n",
+			line_count,
+			delimiter);
 }
