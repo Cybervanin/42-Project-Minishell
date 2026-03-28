@@ -23,7 +23,7 @@ char	*expand_env_var_value(const char *og_str, t_env_breakpoints bkpts,
 	if (!var_value)
 		var_value = ft_strdup("");
 	else
-		var_value = ft_strdup(var_value); // Ensure dynamic allocation
+		var_value = ft_strdup(var_value);
 	return (var_value);
 }
 
