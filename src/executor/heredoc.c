@@ -6,7 +6,7 @@
 /*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/07 09:55:52 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/24 19:43:04 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/28 14:11:15 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ static void	read_heredoc(int *fd, char *delimiter, t_ms *shell)
 {
 	char	*line;
 
-	set_signals_child();
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
 	close(fd[0]);
 	while (1)
 	{
