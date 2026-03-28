@@ -77,8 +77,6 @@ static void	single_cmd_exec(t_ms *shell)
 	char	*command_path;
 
 	expander(shell);
-	close(shell->initial_stdout);
-	close(shell->initial_stdin);
 	if (shell->cmd_list->redirs && apply_redirects(shell) < 0)
 	{
 		if (g_sigint)
