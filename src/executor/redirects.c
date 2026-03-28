@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirects.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 17:41:11 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/07 09:55:02 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/28 17:47:57 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,32 +44,53 @@ static int	redirect_input(char *target)
 
 static int	apply_single_redirect(t_redir *redir, t_ms *shell)
 {
-	int	return_val;
-
-	return_val = 0;
 	if (redir->type == REDIRECT_OUT)
-		return_val = redirect_output(redir->target,
-				O_CREAT | O_WRONLY | O_TRUNC);
-	else if (redir->type == REDIRECT_APPEND)
-		return_val = redirect_output(redir->target,
-				O_CREAT | O_WRONLY | O_APPEND);
-	else if (redir->type == REDIRECT_IN)
-		return_val = redirect_input(redir->target);
-	else if (redir->type == HEREDOC)
-		return_val = redirect_heredoc(redir->target, shell);
-	return (return_val);
+		return (redirect_output(redir->target, O_CREAT | O_WRONLY | O_TRUNC));
+	if (redir->type == REDIRECT_APPEND)
+		return (redirect_output(redir->target, O_CREAT | O_WRONLY | O_APPEND));
+	if (redir->type == REDIRECT_IN)
+		return (redirect_input(redir->target));
+	(void)shell;
+	return (0);
+}
+
+static int	apply_heredoc_redirect(t_redir *redir, t_ms *shell, int *last_fd)
+{
+	int	heredoc_fd;
+
+	heredoc_fd = redirect_heredoc(redir->target, shell);
+	if (heredoc_fd < 0)
+		return (-1);
+	if (*last_fd >= 0)
+		close(*last_fd);
+	*last_fd = heredoc_fd;
+	return (0);
 }
 
 int	apply_redirects(t_ms *shell)
 {
 	t_redir	*redir;
+	int		last_fd;
 
+	last_fd = -1;
 	redir = shell->cmd_list->redirs;
 	while (redir)
 	{
-		if (apply_single_redirect(redir, shell) < 0)
-			return (-1);
+		if (redir->type == HEREDOC && apply_heredoc_redirect
+			(redir, shell, &last_fd) < 0)
+			return (close(last_fd), -1);
+		else
+		{
+			if (apply_single_redirect(redir, shell) < 0)
+				return (close(last_fd), -1);
+			if (redir->type == REDIRECT_IN && last_fd >= 0)
+				last_fd = (close(last_fd), -1);
+		}
 		redir = redir->next;
 	}
+	if (last_fd >= 0)
+		dup2(last_fd, STDIN_FILENO);
+	if (last_fd >= 0)
+		close(last_fd);
 	return (0);
 }
