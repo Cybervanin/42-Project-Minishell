@@ -38,12 +38,13 @@ static void	mount_string(char **og_str, t_env_breakpoints bkpts, t_ms *shell)
 	after_chunk = ft_substr(*og_str, bkpts.env_end + 1, bkpts.i - bkpts.env_end
 			+ 1);
 	temp = ft_strjoin(before_chunk, var_value);
+	free(before_chunk);
+	free(var_value);
 	result = ft_strjoin(temp, after_chunk);
+	free(temp);
+	free(after_chunk);
 	free(*og_str);
 	*og_str = result;
-	free(temp);
-	free(before_chunk);
-	free(after_chunk);
 }
 
 void	rebuild_string(char **og_str, int i, t_ms *shell)
