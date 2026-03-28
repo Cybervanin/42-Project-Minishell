@@ -6,7 +6,7 @@
 /*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:13:10 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/28 16:18:03 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/28 16:47:37 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ void				display_error(char *str, const char *error_msg);
 char				is_dir(const char *path, t_ms *shell);
 char				**deep_copy(char **matrix);
 void				set_signals_heredoc(void);
+void				heredoc_loop(int *fd, char *delimiter, t_ms *shell);
 
 extern int			g_sigint;
 
