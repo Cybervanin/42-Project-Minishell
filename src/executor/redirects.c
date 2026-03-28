@@ -6,7 +6,7 @@
 /*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 17:41:11 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/28 17:47:57 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/28 20:11:36 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,47 +50,29 @@ static int	apply_single_redirect(t_redir *redir, t_ms *shell)
 		return (redirect_output(redir->target, O_CREAT | O_WRONLY | O_APPEND));
 	if (redir->type == REDIRECT_IN)
 		return (redirect_input(redir->target));
+	if (redir->type == HEREDOC)
+	{
+		if (redir->heredoc_fd < 0)
+			return (-1);
+		if (dup2(redir->heredoc_fd, STDIN_FILENO) < 0)
+			return (perror("dup2"), -1);
+		close(redir->heredoc_fd);
+		redir->heredoc_fd = -1;
+	}
 	(void)shell;
-	return (0);
-}
-
-static int	apply_heredoc_redirect(t_redir *redir, t_ms *shell, int *last_fd)
-{
-	int	heredoc_fd;
-
-	heredoc_fd = redirect_heredoc(redir->target, shell);
-	if (heredoc_fd < 0)
-		return (-1);
-	if (*last_fd >= 0)
-		close(*last_fd);
-	*last_fd = heredoc_fd;
 	return (0);
 }
 
 int	apply_redirects(t_ms *shell)
 {
 	t_redir	*redir;
-	int		last_fd;
 
-	last_fd = -1;
 	redir = shell->cmd_list->redirs;
 	while (redir)
 	{
-		if (redir->type == HEREDOC && apply_heredoc_redirect
-			(redir, shell, &last_fd) < 0)
-			return (close(last_fd), -1);
-		else
-		{
-			if (apply_single_redirect(redir, shell) < 0)
-				return (close(last_fd), -1);
-			if (redir->type == REDIRECT_IN && last_fd >= 0)
-				last_fd = (close(last_fd), -1);
-		}
+		if (apply_single_redirect(redir, shell) < 0)
+			return (-1);
 		redir = redir->next;
 	}
-	if (last_fd >= 0)
-		dup2(last_fd, STDIN_FILENO);
-	if (last_fd >= 0)
-		close(last_fd);
 	return (0);
 }

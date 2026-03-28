@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals_helper.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
+/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 19:45:13 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/24 19:45:13 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/28 20:51:36 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,17 @@ static void	set_wait_status(t_ms *shell, int status)
 
 static void	wait_other_children(t_cmd *current)
 {
+	int	status;
+
 	while (current->next)
 	{
-		while (wait(NULL) == -1)
+		while (wait(&status) == -1)
 		{
 			if (errno != EINTR)
 				break ;
 		}
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGPIPE)
+			write(2, "Broken pipe\n", 12);
 		current = current->next;
 	}
 }

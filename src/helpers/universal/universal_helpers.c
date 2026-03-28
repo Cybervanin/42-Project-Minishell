@@ -6,7 +6,7 @@
 /*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:15:37 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/27 14:55:42 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/28 20:31:05 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,19 +33,21 @@ inline char	is_metachar(char c)
 
 char	is_builtin(char *input)
 {
-	if (ft_strncmp(input, "cd", ft_strlen(input)) == 0)
+	if (!input)
+		return (0);
+	if (ft_strncmp(input, "cd", 3) == 0)
 		return (1);
-	else if (ft_strncmp(input, "pwd", ft_strlen(input)) == 0)
+	else if (ft_strncmp(input, "pwd", 4) == 0)
 		return (1);
-	else if (ft_strncmp(input, "export", ft_strlen(input)) == 0)
+	else if (ft_strncmp(input, "export", 7) == 0)
 		return (1);
-	else if (ft_strncmp(input, "unset", ft_strlen(input)) == 0)
+	else if (ft_strncmp(input, "unset", 6) == 0)
 		return (1);
-	else if (ft_strncmp(input, "echo", ft_strlen(input)) == 0)
+	else if (ft_strncmp(input, "echo", 5) == 0)
 		return (1);
-	else if (ft_strncmp(input, "env", ft_strlen(input)) == 0)
+	else if (ft_strncmp(input, "env", 4) == 0)
 		return (1);
-	else if (ft_strncmp(input, "exit", ft_strlen(input)) == 0)
+	else if (ft_strncmp(input, "exit", 5) == 0)
 		return (1);
 	else
 		return (0);

@@ -15,6 +15,34 @@
 
 #include "../minishell.h"
 
+static int	prepare_heredocs(t_ms *shell)
+{
+	t_cmd	*cmd;
+	t_redir	*redir;
+	int		fd;
+
+	cmd = shell->cmd_list;
+	while (cmd)
+	{
+		redir = cmd->redirs;
+		while (redir)
+		{
+			if (redir->type == HEREDOC)
+			{
+				if (redir->heredoc_fd >= 0)
+					close(redir->heredoc_fd);
+				fd = redirect_heredoc(redir->target, shell);
+				if (fd < 0)
+					return (-1);
+				redir->heredoc_fd = fd;
+			}
+			redir = redir->next;
+		}
+		cmd = cmd->next;
+	}
+	return (0);
+}
+
 static void	piece_cmd_exec(t_ms *shell, int *fd)
 {
 	char	*command_path;
@@ -28,6 +56,8 @@ static void	piece_cmd_exec(t_ms *shell, int *fd)
 	close(fd[1]);
 	if (shell->cmd_list->redirs && apply_redirects(shell) < 0)
 		exit(EXIT_FAILURE);
+	if (!shell->cmd_list->args || !shell->cmd_list->args[0])
+		exit(shell->last_status);
 	if (is_builtin(shell->cmd_list->args[0]))
 	{
 		call_builtins(shell);
@@ -56,16 +86,14 @@ static pid_t	multi_cmd_exec(t_ms *shell)
 		child_id = fork();
 		if (child_id == 0)
 			piece_cmd_exec(shell, fd);
-		if (shell->last_status != 0)
-		{
-			close(fd[1]);
-			break ;
-		}
 		if (shell->cmd_list->next)
 		{
 			dup2(fd[0], STDIN_FILENO);
+			close(fd[0]);
 			close(fd[1]);
 		}
+		else
+			dup2(shell->initial_stdin, STDIN_FILENO);
 		shell->cmd_list = shell->cmd_list->next;
 	}
 	close(fd[0]);
@@ -88,6 +116,8 @@ static void	single_cmd_exec(t_ms *shell)
 		}
 		exit(EXIT_FAILURE);
 	}
+	if (!shell->cmd_list->args || !shell->cmd_list->args[0])
+		return ;
 	if (is_builtin(shell->cmd_list->args[0]))
 		call_builtins(shell);
 	else
@@ -104,6 +134,15 @@ void	executor(t_ms *shell)
 	t_cmd	*first;
 
 	first = shell->cmd_list;
+	if (prepare_heredocs(shell) < 0)
+	{
+		if (g_sigint)
+		{
+			g_sigint = 0;
+			shell->last_status = 130;
+		}
+		return ;
+	}
 	shell->initial_stdout = dup(STDOUT_FILENO);
 	shell->initial_stdin = dup(STDIN_FILENO);
 	if (shell->cmd_list->next)

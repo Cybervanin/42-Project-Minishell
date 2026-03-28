@@ -53,6 +53,7 @@ static int	add_new_redir(t_token *token_list, t_cmd *cmd, int *i)
 	novo->target = ft_strdup(token_list[*i + 1].value);
 	if (!novo->target)
 		return (free(novo), 1);
+	novo->heredoc_fd = -1;
 	novo->next = NULL;
 	if (cmd->redirs == NULL)
 		return (cmd->redirs = novo, 0);

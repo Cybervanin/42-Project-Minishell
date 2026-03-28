@@ -91,6 +91,8 @@ static void	strip_arg_quotes(char **arg)
 {
 	char *no_quotes;
 
+	if (!arg || !*arg)
+		return ;
 	if (!ft_strchr(*arg, '"') && !ft_strchr(*arg, '\''))
 		return ;
 	no_quotes = remove_quotes(*arg);
@@ -115,8 +117,11 @@ void	expander(t_ms *shell)
 	redir = shell->cmd_list->redirs;
 	while (redir)
 	{
-		expand_arg(&(redir->target), shell);
-		strip_arg_quotes(&(redir->target));
+		if (redir->type != HEREDOC)
+		{
+			expand_arg(&(redir->target), shell);
+			strip_arg_quotes(&(redir->target));
+		}
 		redir = redir->next;
 	}
 }
