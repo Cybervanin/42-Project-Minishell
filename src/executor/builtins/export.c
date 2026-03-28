@@ -6,7 +6,7 @@
 /*   By: jode-cas <jode-cas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 17:44:02 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/02 17:44:02 by jode-cas         ###   ########.fr       */
+/*   Updated: 2026/03/28 13:42:02 by jode-cas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,22 +28,54 @@ static int	is_valid_identifier(char *name)
 	return (1);
 }
 
-static void	print_declared(char *env)
+static void	sort_envs_alphabetically(char **envs)
+{
+	int		i;
+	int		j;
+	char	*temp;
+
+	i = 0;
+	while (envs[i])
+	{
+		j = 0;
+		while (envs[j + 1])
+		{
+			if (ft_strncmp(envs[j], envs[j + 1], ft_strlen(envs[j]) + 1) > 0)
+			{
+				temp = envs[j];
+				envs[j] = envs[j + 1];
+				envs[j + 1] = temp;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+static void	print_declared(t_ms *shell)
 {
 	char	*eq;
+	int		i;
 
-	ft_putstr_fd("declare -x ", 1);
-	eq = ft_strchr(env, '=');
-	if (!eq)
+	i = 0;
+	sort_envs_alphabetically(shell->envs);
+	while (shell->envs[i])
 	{
-		ft_putstr_fd(env, 1);
-		ft_putchar_fd('\n', 1);
-		return ;
+		ft_putstr_fd("declare -x ", 1);
+		eq = ft_strchr(shell->envs[i], '=');
+		if (!eq)
+		{
+			ft_putstr_fd(shell->envs[i], 1);
+			ft_putchar_fd('\n', 1);
+			return ;
+		}
+		write(1, shell->envs[i], eq - shell->envs[i]);
+		ft_putstr_fd("=\"", 1);
+		ft_putstr_fd(eq + 1, 1);
+		ft_putstr_fd("\"\n", 1);
+		i++;
 	}
-	write(1, env, eq - env);
-	ft_putstr_fd("=\"", 1);
-	ft_putstr_fd(eq + 1, 1);
-	ft_putstr_fd("\"\n", 1);
+	shell->last_status = 0;
 }
 
 static int	process_arg(char *arg, t_ms *shell)
@@ -79,10 +111,7 @@ void	builtin_export(char **args, t_ms *shell)
 
 	if (!args[1])
 	{
-		i = 0;
-		while (shell->envs[i])
-			print_declared(shell->envs[i++]);
-		shell->last_status = 0;
+		print_declared(shell);
 		return ;
 	}
 	i = 1;
