@@ -6,7 +6,7 @@
 /*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/02 15:13:10 by jode-cas          #+#    #+#             */
-/*   Updated: 2026/03/28 20:35:17 by victde-s         ###   ########.fr       */
+/*   Updated: 2026/03/28 20:49:09 by victde-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_redir
 {
 	t_token_type	type;
 	char			*target;
-	int			heredoc_fd;
+	int				heredoc_fd;
 	struct s_redir	*next;
 }					t_redir;
 

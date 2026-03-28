@@ -56,6 +56,8 @@ static void	piece_cmd_exec(t_ms *shell, int *fd)
 	close(fd[1]);
 	if (shell->cmd_list->redirs && apply_redirects(shell) < 0)
 		exit(EXIT_FAILURE);
+	if (!shell->cmd_list->args || !shell->cmd_list->args[0])
+		exit(shell->last_status);
 	if (is_builtin(shell->cmd_list->args[0]))
 	{
 		call_builtins(shell);
@@ -87,8 +89,11 @@ static pid_t	multi_cmd_exec(t_ms *shell)
 		if (shell->cmd_list->next)
 		{
 			dup2(fd[0], STDIN_FILENO);
+			close(fd[0]);
 			close(fd[1]);
 		}
+		else
+			dup2(shell->initial_stdin, STDIN_FILENO);
 		shell->cmd_list = shell->cmd_list->next;
 	}
 	close(fd[0]);
@@ -111,6 +116,8 @@ static void	single_cmd_exec(t_ms *shell)
 		}
 		exit(EXIT_FAILURE);
 	}
+	if (!shell->cmd_list->args || !shell->cmd_list->args[0])
+		return ;
 	if (is_builtin(shell->cmd_list->args[0]))
 		call_builtins(shell);
 	else

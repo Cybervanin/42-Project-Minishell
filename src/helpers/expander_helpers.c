@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander_helpers.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: victde-s <victde-s@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/28 20:00:00 by victde-s          #+#    #+#             */
+/*   Updated: 2026/03/28 20:42:40 by victde-s         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*expand_env_var_value(const char *og_str, t_env_breakpoints bkpts,
@@ -23,7 +35,7 @@ char	*expand_env_var_value(const char *og_str, t_env_breakpoints bkpts,
 	if (!var_value)
 		var_value = ft_strdup("");
 	else
-		var_value = ft_strdup(var_value); // Ensure dynamic allocation
+		var_value = ft_strdup(var_value);
 	return (var_value);
 }
 
@@ -31,14 +43,12 @@ void	remove_empty_arg(char **args)
 {
 	int	i;
 
+	if (!args || !args[0] || ft_strlen(args[0]) != 0)
+		return ;
 	i = 0;
-	if (ft_strlen(*args) == 0 && array_length(args) > 1)
+	while (args[i])
 	{
-		i = 0;
-		while (args[i])
-		{
-			args[i] = args[i + 1];
-			i++;
-		}
+		args[i] = args[i + 1];
+		i++;
 	}
 }

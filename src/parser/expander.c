@@ -91,6 +91,8 @@ static void	strip_arg_quotes(char **arg)
 {
 	char *no_quotes;
 
+	if (!arg || !*arg)
+		return ;
 	if (!ft_strchr(*arg, '"') && !ft_strchr(*arg, '\''))
 		return ;
 	no_quotes = remove_quotes(*arg);
