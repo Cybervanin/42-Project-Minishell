@@ -91,3 +91,11 @@ void	call_path(t_ms *shell, char *cmd_path)
 	set_signals();
 	get_return_status(shell, return_status);
 }
+
+void	restore_std_streams(t_ms *shell)
+{
+	dup2(shell->initial_stdout, STDOUT_FILENO);
+	close(shell->initial_stdout);
+	dup2(shell->initial_stdin, STDIN_FILENO);
+	close(shell->initial_stdin);
+}

@@ -15,52 +15,43 @@
 
 #include "../minishell.h"
 
-static int	count_token_args(t_token *token_list, int i)
+static char	*validate_redir_target(t_token *token_list, int i)
 {
-	int	arg_count;
-
-	arg_count = 0;
-	while (token_list[i].value != NULL && token_list[i].type != PIPE)
-	{
-		if (token_list[i].type == WORD)
-			arg_count++;
-		else
-		{
-			if (token_list[i + 1].value != NULL)
-				i += 1;
-		}
-		i += 1;
-	}
-	return (arg_count);
+	if (token_list[i + 1].value == NULL)
+		printf("minishell: syntax error near unexpected token 'newline'\n");
+	else if (token_list[i + 1].type != WORD)
+		printf("minishell: syntax error near unexpected token '%s'\n",
+			token_list[i + 1].value);
+	if (token_list[i + 1].value == NULL || token_list[i + 1].type != WORD)
+		return (NULL);
+	return (token_list[i + 1].value);
 }
 
 static int	add_new_redir(t_token *token_list, t_cmd *cmd, int *i)
 {
 	t_redir	*novo;
-	t_redir	*ultimo;
+	t_redir	**link;
+	char	*target;
 
-	if (token_list[*i + 1].value == NULL)
-		printf("minishell: syntax error near unexpected token 'newline'\n");
-	else if (token_list[*i + 1].type != WORD)
-		printf("minishell: syntax error near unexpected token '%s'\n",
-			token_list[*i + 1].value);
-	if (token_list[*i + 1].value == NULL || token_list[*i + 1].type != WORD)
+	target = validate_redir_target(token_list, *i);
+	if (!target)
 		return (1);
 	novo = ft_calloc(1, sizeof(t_redir));
 	if (!novo)
 		return (1);
 	novo->type = token_list[*i].type;
-	novo->target = ft_strdup(token_list[*i + 1].value);
+	novo->target = ft_strdup(target);
 	if (!novo->target)
-		return (free(novo), 1);
+	{
+		free(novo);
+		return (1);
+	}
 	novo->heredoc_fd = -1;
 	novo->next = NULL;
-	if (cmd->redirs == NULL)
-		return (cmd->redirs = novo, 0);
-	ultimo = cmd->redirs;
-	while (ultimo->next != NULL)
-		ultimo = ultimo->next;
-	ultimo->next = novo;
+	link = &cmd->redirs;
+	while (*link)
+		link = &(*link)->next;
+	*link = novo;
 	return (0);
 }
 
@@ -92,13 +83,20 @@ static int	parse_token_to_cmd(t_token *token_list, t_cmd *cmd, int *i)
 static int	create_and_parse_cmd(t_token *token_list, t_cmd **last, int *i)
 {
 	t_cmd	*new;
+	int		j;
 
 	new = ft_calloc(1, sizeof(t_cmd));
 	if (!new)
 		return (1);
-	new->args = ft_calloc(sizeof(char *), count_token_args(token_list, *i) + 1);
+	j = *i;
+	while (token_list[j].value != NULL && token_list[j].type != PIPE)
+		j++;
+	new->args = ft_calloc(sizeof(char *), (j - *i) + 1);
 	if (!new->args || parse_token_to_cmd(token_list, new, i) != 0)
-		return (free_cmd_list(new), 1);
+	{
+		free_cmd_list(new);
+		return (1);
+	}
 	new->next = NULL;
 	if (*last)
 		(*last)->next = new;

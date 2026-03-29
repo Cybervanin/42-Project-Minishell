@@ -63,14 +63,11 @@ static void	piece_cmd_exec(t_ms *shell, int *fd)
 		call_builtins(shell);
 		exit(shell->last_status);
 	}
-	else
-	{
-		command_path = get_full_cmd_path(shell);
-		execve(command_path, shell->cmd_list->args, shell->envs);
-		free(command_path);
-		shell->last_status = EXIT_FAILURE;
-		exit(shell->last_status);
-	}
+	command_path = get_full_cmd_path(shell);
+	execve(command_path, shell->cmd_list->args, shell->envs);
+	free(command_path);
+	shell->last_status = EXIT_FAILURE;
+	exit(shell->last_status);
 }
 
 static pid_t	multi_cmd_exec(t_ms *shell)
@@ -119,13 +116,13 @@ static void	single_cmd_exec(t_ms *shell)
 	if (!shell->cmd_list->args || !shell->cmd_list->args[0])
 		return ;
 	if (is_builtin(shell->cmd_list->args[0]))
-		call_builtins(shell);
-	else
 	{
-		command_path = get_full_cmd_path(shell);
-		call_path(shell, command_path);
-		free(command_path);
+		call_builtins(shell);
+		return ;
 	}
+	command_path = get_full_cmd_path(shell);
+	call_path(shell, command_path);
+	free(command_path);
 }
 
 void	executor(t_ms *shell)
@@ -137,10 +134,8 @@ void	executor(t_ms *shell)
 	if (prepare_heredocs(shell) < 0)
 	{
 		if (g_sigint)
-		{
 			g_sigint = 0;
-			shell->last_status = 130;
-		}
+		shell->last_status = 130;
 		return ;
 	}
 	shell->initial_stdout = dup(STDOUT_FILENO);
@@ -155,8 +150,5 @@ void	executor(t_ms *shell)
 	}
 	else
 		single_cmd_exec(shell);
-	dup2(shell->initial_stdout, STDOUT_FILENO);
-	close(shell->initial_stdout);
-	dup2(shell->initial_stdin, STDIN_FILENO);
-	close(shell->initial_stdin);
+	restore_std_streams(shell);
 }
