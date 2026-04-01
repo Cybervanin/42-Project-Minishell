@@ -58,6 +58,8 @@ static void	execute_child(t_ms *shell, char *cmd_path)
 		display_error(cmd_path, ": Is a directory\n");
 		exit(126);
 	}
+	close(shell->initial_stdin);
+	close(shell->initial_stdout);
 	execve(cmd_path, shell->cmd_list->args, shell->envs);
 	if (errno == EACCES)
 	{
